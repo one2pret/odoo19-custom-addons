@@ -3,10 +3,19 @@ from odoo.addons.web.controllers.home import Home
 
 class CustomHome(Home):
 
-    @http.route('/app', type='http', auth='none')
-    def app_redirect(self, **kw):
-        return http.redirect_with_hash('/odoo')
-
-    @http.route('/discuss', type='http', auth='user')
-    def discuss_shortcut(self, **kw):
-        return http.redirect_with_hash('/odoo/discuss')
+    # Daftarkan base-url aplikasi yang ingin dihilangkan "/odoo"-nya di sini
+    @http.route([
+        '/discuss',
+        '/discuss/<path:subpath>',
+        '/inventory',
+        '/inventory/<path:subpath>',
+        '/calendar',
+        '/calendar/<path:subpath>',
+        '/contacts',
+        '/contacts/<path:subpath>',
+        '/sales',
+        '/sales/<path:subpath>',
+    ], type='http', auth="none")
+    def custom_app_routes(self, **kw):
+        # Langsung load web client, biarkan router JS kita yang menangani sisanya
+        return self.web_client(**kw)
